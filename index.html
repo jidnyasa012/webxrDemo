@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebXR Sample</title>
+  <style>
+    #xr-canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="xr-canvas"></canvas>
+
+  <script>
+    // Get the XR canvas element
+    const xrCanvas = document.getElementById('xr-canvas');
+
+    // Function to set up the WebXR scene
+    function setupWebXRScene() {
+      if (!navigator.xr) {
+        console.log('WebXR not supported');
+        return;
+      }
+
+      // Add a click event listener to start the XR session
+      xrCanvas.addEventListener('click', startXRSession);
+
+      // Set up other scene elements and configurations here
+    }
+
+    // Function to start the XR session
+    function startXRSession() {
+      navigator.xr
+        .requestSession('immersive-ar')
+        .then((session) => {
+          // Use the XR session to render the AR scene
+          session.addEventListener('end', onSessionEnd);
+
+          // Render the scene in the XR session
+          session.requestAnimationFrame(renderXRScene);
+        })
+        .catch((error) => {
+          console.log('WebXR session failed:', error);
+        });
+    }
+
+    // Function to handle the end of the XR session
+    function onSessionEnd() {
+      // Clean up any resources or event listeners
+    }
+
+    // Function to render the XR scene
+    function renderXRScene(timestamp, xrFrame) {
+      const xrSession = xrFrame.session;
+
+      // Render the scene and objects here
+
+      // Call the next frame
+      xrSession.requestAnimationFrame(renderXRScene);
+    }
+
+    // Call the function to set up the WebXR scene
+    setupWebXRScene();
+  </script>
+</body>
+</html>
