@@ -1,89 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>WebXR Sample</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Matrix Rain</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.module.js"></script>
-</head>
-<body>
-  var scene = new THREE.Scene();
+  <head>
+    <meta charset="utf-8" />
+    <title>Matrix Rain in WebXR</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-camera id="camera" position="0 1.6 0"></a-camera>
 
-// Create a new camera
-var camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 1, 1100);
-camera.position.z = 500;
+      <a-entity id="matrixRainEntity" visible="false" geometry="primitive: plane; width: 100; height: 100" material="color: green; opacity: 0.3" particle-system="preset: rain; size: 0.1; color: #00FF00">
+      </a-entity>
+    </a-scene>
 
-// Add the camera to the scene
-scene.add(camera);
+    <script>
+      document.querySelector("#camera").addEventListener("loaded", function () {
+        var cameraEl = document.querySelector("#camera");
+        var matrixRainEntity = document.querySelector("#matrixRainEntity");
 
-// Create a new renderer
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize(innerWidth, innerHeight);
-document.body.appendChild(renderer.domElement);
+        cameraEl.addEventListener("componentchanged", function (event) {
+          if (event.detail.name === "position") {
+            var cameraPosition = cameraEl.getAttribute("position");
+            var cameraVisible = cameraEl.getAttribute("visible");
 
-// Create a new animation loop
-var animate = function() {
-  requestAnimationFrame(animate);
-
-  // Update the scene
-  scene.update();
-
-  // Render the scene
-  renderer.render(scene, camera);
-};
-
-// Request a WebXR session
-navigator.xr.requestSession({
-  requiredFeatures: ["dom-camera-image"],
-}).then(session => {
-  // Acquire the camera
-  session.acquireXRCamera().then(camera => {
-    camera.startTracking();
-
-    // Create a new material
-    var material = new THREE.ShaderMaterial({
-      uniforms: {
-        time: { type: "float", value: Date.now() / 1000 },
-      },
-      vertexShader: `
-        varying vec2 vUv;
-    
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }`,
-      fragmentShader: `
-        precision highp float;
-    
-        varying vec2 vUv;
-        uniform float time;
-    
-        void main() {
-          vec2 uv = vUv;
-          vec3 color = vec3(0.5, 0.5, 0.5);
-          uv += vec2(sin(uv.x * 100.0 + time * 0.1) * 0.1, cos(uv.y * 100.0 + time * 0.1) * 0.1);
-          uv = vec2(uv.x, 1.0 - uv.y);
-          uv *= 200.0;
-          uv -= 100.0;
-          gl_FragColor = vec4(color, 1.0);
-        }`
-    });
-
-    // Create a new geometry
-    var geometry = new THREE.PlaneBufferGeometry(500, 500);
-
-    // Create a new mesh
-    var mesh = new THREE.Mesh(geometry, material);
-
-    // Add the mesh to the scene
-    scene.add(mesh);
-
-    // Start the animation loop
-    animate();
-  });
-});
-
-
-</body>
+            // Check if the camera is visible and within a certain range
+            if (cameraVisible && cameraPosition.y > 0 && cameraPosition.z < -4) {
+              matrixRainEntity.setAttribute("visible", true);
+            } else {
+              matrixRainEntity.setAttribute("visible", false);
+            }
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
