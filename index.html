@@ -2,67 +2,21 @@
 <html>
 <head>
   <title>WebXR Sample</title>
-  <style>
-    #xr-canvas {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Matrix Rain</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/137/three.min.js"></script>
 </head>
 <body>
-  <canvas id="xr-canvas"></canvas>
+  // Create a new scene
+    var scene = new THREE.Scene();
 
-  <script>
-    // Get the XR canvas element
-    const xrCanvas = document.getElementById('xr-canvas');
+    // Create a new camera
+    var camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 1, 1100);
+    camera.position.z = 500;
 
-    // Function to set up the WebXR scene
-    function setupWebXRScene() {
-      if (!navigator.xr) {
-        console.log('WebXR not supported');
-        alert('WebXR not supported');
-        return;
-      }
+    // Add the camera to the scene
+    scene.add(camera);
 
-      // Add a click event listener to start the XR session
-      xrCanvas.addEventListener('click', startXRSession);
-
-      // Set up other scene elements and configurations here
-    }
-
-    // Function to start the XR session
-    function startXRSession() {
-      navigator.xr
-        .requestSession('immersive-ar')
-        .then((session) => {
-          // Use the XR session to render the AR scene
-          session.addEventListener('end', onSessionEnd);
-
-          // Render the scene in the XR session
-          session.requestAnimationFrame(renderXRScene);
-        })
-        .catch((error) => {
-          console.log('WebXR session failed:', error);
-        });
-    }
-
-    // Function to handle the end of the XR session
-    function onSessionEnd() {
-      // Clean up any resources or event listeners
-    }
-
-    // Function to render the XR scene
-    function renderXRScene(timestamp, xrFrame) {
-      const xrSession = xrFrame.session;
-
-      // Render the scene and objects here
-
-      // Call the next frame
-      xrSession.requestAnimationFrame(renderXRScene);
-    }
-
-    // Call the function to set up the WebXR scene
-    setupWebXRScene();
-  </script>
 </body>
 </html>
