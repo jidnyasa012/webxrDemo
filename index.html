@@ -17,79 +17,79 @@ camera.position.z = 500;
 // Add the camera to the scene
 scene.add(camera);
 
-// Create a new renderer
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize(innerWidth, innerHeight);
-document.body.appendChild(renderer.domElement);
+// // Create a new renderer
+// var renderer = new THREE.WebGLRenderer();
+// renderer.setSize(innerWidth, innerHeight);
+// document.body.appendChild(renderer.domElement);
 
-// Create a new animation loop
-var animate = function() {
-  requestAnimationFrame(animate);
+// // Create a new animation loop
+// var animate = function() {
+//   requestAnimationFrame(animate);
 
-  // Update the scene
-  scene.update();
+//   // Update the scene
+//   scene.update();
 
-  // Render the scene
-  renderer.render(scene, camera);
-};
+//   // Render the scene
+//   renderer.render(scene, camera);
+// };
 
-// Request a WebXR session
-navigator.xr.requestSession({
-  requiredFeatures: ["dom-camera-image"],
-}).then(session => {
-  // Acquire the camera
-  session.acquireXRCamera().then(camera => {
-    camera.startTracking();
+// // Request a WebXR session
+// navigator.xr.requestSession({
+//   requiredFeatures: ["dom-camera-image"],
+// }).then(session => {
+//   // Acquire the camera
+//   session.acquireXRCamera().then(camera => {
+//     camera.startTracking();
 
-    // Create a new material
-    var material = new THREE.ShaderMaterial({
-      uniforms: {
-        time: { type: "float", value: Date.now() / 1000 },
-      },
-      vertexShader: `
-        varying vec2 vUv;
+//     // Create a new material
+//     var material = new THREE.ShaderMaterial({
+//       uniforms: {
+//         time: { type: "float", value: Date.now() / 1000 },
+//       },
+//       vertexShader: `
+//         varying vec2 vUv;
     
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }`,
-      fragmentShader: `
-        precision highp float;
+//         void main() {
+//           vUv = uv;
+//           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+//         }`,
+//       fragmentShader: `
+//         precision highp float;
     
-        varying vec2 vUv;
-        uniform float time;
+//         varying vec2 vUv;
+//         uniform float time;
     
-        void main() {
-          vec2 uv = vUv;
-          vec3 color = vec3(0.5, 0.5, 0.5);
-          uv += vec2(sin(uv.x * 100.0 + time * 0.1) * 0.1, cos(uv.y * 100.0 + time * 0.1) * 0.1);
-          uv = vec2(uv.x, 1.0 - uv.y);
-          uv *= 200.0;
-          uv -= 100.0;
-          gl_FragColor = vec4(color, 1.0);
-        }`
-    });
+//         void main() {
+//           vec2 uv = vUv;
+//           vec3 color = vec3(0.5, 0.5, 0.5);
+//           uv += vec2(sin(uv.x * 100.0 + time * 0.1) * 0.1, cos(uv.y * 100.0 + time * 0.1) * 0.1);
+//           uv = vec2(uv.x, 1.0 - uv.y);
+//           uv *= 200.0;
+//           uv -= 100.0;
+//           gl_FragColor = vec4(color, 1.0);
+//         }`
+//     });
 
-    // Create a new geometry
-    var geometry = new THREE.PlaneBufferGeometry(500, 500);
+//     // Create a new geometry
+//     var geometry = new THREE.PlaneBufferGeometry(500, 500);
 
-    // Create a new mesh
-    var mesh = new THREE.Mesh(geometry, material);
+//     // Create a new mesh
+//     var mesh = new THREE.Mesh(geometry, material);
 
-    // Add the mesh to the scene
-    scene.add(mesh);
+//     // Add the mesh to the scene
+//     scene.add(mesh);
 
-    // Create a new matrix rain effect
-    var matrixRain = new THREE.MatrixRain();
+//     // Create a new matrix rain effect
+//     var matrixRain = new THREE.MatrixRain();
 
-    // Set the matrix rain effect to follow the camera
-    matrixRain.followCamera = true;
+//     // Set the matrix rain effect to follow the camera
+//     matrixRain.followCamera = true;
 
-    // Add the matrix rain effect to the scene
-    scene.add(matrixRain);
+//     // Add the matrix rain effect to the scene
+//     scene.add(matrixRain);
 
-    // Start the animation loop
-    animate();
+//     // Start the animation loop
+//     animate();
   });
 });
 </script>
