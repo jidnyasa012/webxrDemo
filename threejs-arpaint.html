@@ -39,7 +39,7 @@
         if (e.detail.webXRStatus === "supported") {
           //WebXR is supported
           document.body.appendChild(
-            ARButton.createButton(renderer, { requiredFeatures: ["local","hit-test"] })
+            ARButton.createButton(renderer, { requiredFeatures: ["hit-test"] })
           );
           return;
         }
